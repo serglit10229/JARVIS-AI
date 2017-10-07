@@ -29,7 +29,7 @@ namespace JARVIS
             s.SelectVoice("Microsoft Irina Desktop");
             //s.SpeakAsync("привет");
             s.Rate = 3;
-            s.SpeakAsync("1234582323482039");
+            s.SpeakAsync("1");
 
 
             System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("ru-RU");
