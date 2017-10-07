@@ -29,7 +29,7 @@ namespace JARVIS
             s.SelectVoice("Microsoft Irina Desktop");
             //s.SpeakAsync("привет");
             s.Rate = 3;
-            s.SpeakAsync("123");
+            s.SpeakAsync("1234582323482039");
 
 
             System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("ru-RU");
@@ -162,6 +162,11 @@ namespace JARVIS
                 Process.Start("https://google.com");
             }
             //}
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
