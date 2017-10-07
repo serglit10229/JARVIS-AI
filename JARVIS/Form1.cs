@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Diagnostics;
+using System.IO;
 
 namespace JARVIS
 {
@@ -46,6 +47,8 @@ namespace JARVIS
                 "restart", "update", "open steam", "close steam",
             });
 
+            Choices Numbers = new Choices();
+            Words.Add(File.ReadAllLines(@"C:\Users\NIK\Desktop\Numbers.txt"));
 
             GrammarBuilder gb = new GrammarBuilder();
             gb.Culture = ci;
@@ -134,6 +137,29 @@ namespace JARVIS
                 {
                     //What it says
                     say("Всё в норме. Состояние материнской платы - отличное. Процессор в порядке. А как у вас?");
+                }
+            }
+
+            //
+            //Mathmatics
+            //
+            {
+                int line1 = 0;
+                int line2 = 0;
+
+
+                if (r == "Посчитай Числа")
+                {
+                    say("Скажите математицескую функцию вы хотите исполнить");
+                    {
+                        if (r == "Сложение")
+                        {
+                            say("Скажите Число 1");
+                            line1 = r;
+                            say("Скажите Число 2");
+                            line2 = r;
+                        }
+                    }
                 }
             }
 
