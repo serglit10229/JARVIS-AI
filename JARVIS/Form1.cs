@@ -27,7 +27,7 @@ namespace JARVIS
         private void Form1_Shown(object sender, EventArgs e)
         {
 
-            s.SelectVoice("Microsoft Irina Desktop");
+            s.SelectVoice("Microsoft Pavel Mobile");
             //s.SpeakAsync("привет");
             s.Rate = 3;
             s.SpeakAsync("1");
@@ -42,13 +42,14 @@ namespace JARVIS
 
             Choices Words = new Choices();
             Words.Add(new string[] {
-                "привет", "здравствуй","здравствуйте", "добрый день","дратути","дратути","дороу","однако зравствуйте","ку","как дела","как настроение", "че как",
+                "привет", "здравствуй","здравствуйте", "добрый день","дратути","дратути","дороу","однако зравствуйте","ку","как дела","как настроение", "чё как",
                 "Сколько время","Сколько времяни", "what is today?", "open google", "turn off", "wake up",
-                "restart", "update", "open steam", "close steam",
+                "restart", "update", "open steam", "close steam", "посчитай числа","скажите математическую функцию вы хотите исполнить","сложение",
+                "скажите первое число","скажите второе число"
             });
 
             Choices Numbers = new Choices();
-            Words.Add(File.ReadAllLines(@"C:\Users\NIK\Desktop\Numbers.txt"));
+            Words.Add(File.ReadAllLines(@"C:\Users\direc\Desktop\Numbers.txt"));
 
             GrammarBuilder gb = new GrammarBuilder();
             gb.Culture = ci;
@@ -74,7 +75,7 @@ namespace JARVIS
 
         public void say(String h)
         {
-            s.Speak(h);
+            s.SpeakAsync(h);
         }
 
         public void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
@@ -140,26 +141,32 @@ namespace JARVIS
                 }
             }
 
-            //
+            ////////////
             //Mathmatics
-            //
+            ////////////
             {
                 int line1 = 0;
                 int line2 = 0;
 
 
-                if (r == "Посчитай Числа")
+                if (r == "посчитай числа")
                 {
-                    say("Скажите математицескую функцию вы хотите исполнить");
+                    say("скажите математическую функцию вы хотите исполнить");
+                    if (r == "сложение")
                     {
-                        if (r == "Сложение")
-                        {
-                            say("Скажите Число 1");
-                            line1 = r;
-                            say("Скажите Число 2");
-                            line2 = r;
-                        }
+                        say("скажите первое число");
+                        line1 = int.Parse(r);
+                        say("Скажите второе число");
+                        line2 = int.Parse(r);
+                        double output;
+
+                        output = line1 + line2;
+                        string OutputText;
+                        OutputText = output.ToString();
+
+                        say(OutputText);
                     }
+
                 }
             }
 
@@ -194,5 +201,7 @@ namespace JARVIS
         {
 
         }
+
+
     }
 }
