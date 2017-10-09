@@ -30,11 +30,16 @@ namespace JARVIS
         Boolean wake = true;
         Boolean math_add = false;
 
+        //
+        //All the integers
+        //
+        int Ticks = 0;
+        int seconds = 0;
+        int minutes = 0;
         string temp;
         string condition;
         string high;
         string low;
-
 
         private void Form1_Shown(object sender, EventArgs e)
         {
@@ -60,6 +65,10 @@ namespace JARVIS
                 "restart", "update", "open steam", "close steam", "сложи числа","скажите первое число","скажите второе число", "прогноз погоды",
                 "погода", "какая на сегодня погода"
             });
+
+            Choices Numbers = new Choices();
+            //Words.Add(File.ReadAllLines(@"C:\Users\direc\Desktop\Numbers.txt"));
+            Words.Add(File.ReadAllLines(@"C:\Users\NIK\Desktop\Numbers.txt"));
 
             
             //Words.Add(File.ReadAllLines(@"C:\Users\direc\Desktop\Numbers.txt"));
@@ -193,9 +202,9 @@ namespace JARVIS
 
 
 
-            /////////////
+            //
             //Приветствия
-            /////////////
+            //
             {
                 //What you say
                 if (r == "привет" || r == "здравствуй" || r == "здравствуйте" || r == "добрый день" || r == "дратути" || r == "дороу" || r == "однако зравствуйте" || r == "ку")
@@ -213,73 +222,79 @@ namespace JARVIS
                 }
             }
 
-            ////////////
+            //
             //Mathmatics
-            ////////////
+            //
             {
-                int line1 = 0;
-                int line2 = 0;
-
+                float line1 = 0;
+                float line2 = 0;
+                float out1;
 
                 if (r == "сложи числа")
                 {
-
-                    math_add = true;
-                    wake = false;
-
+                    say("скажите математическую функцию вы хотите исполнить");
+                    if (r == "сложение")
+                    {
+                        say("скажите первое число");
+                        line1 = int.Parse(r);
+                        say("Скажите второе число");
+                        line2 = int.Parse(r);
+                        say("Числа введены, ответ:");
+                        say(line1 + line2.ToString());
+                    }
+                    if (r == "деление")
+                    {
+                        say("скажите первое число");
+                        line1 = int.Parse(r);
+                        say("Скажите второе число");
+                        line2 = int.Parse(r);
+                        say("Числа введены, ответ:");
+                        out1 = line1 / line2;
+                        say(out1.ToString());
+                    }
+                    if (r == "Умножение")
+                    {
+                        say("скажите первое число");
+                        line1 = int.Parse(r);
+                        say("Скажите второе число");
+                        line2 = int.Parse(r);
+                        say("Числа введены, ответ:");
+                        out1 = line1 * line2;
+                        say(out1.ToString());
+                    }
                 }
 
-                if (math_add == true)
+
+                //What you say
+                if (r == "Сколько времяни" || r == "Сколько время")
                 {
-                    say("скажите первое число");
-                    line1 = int.Parse(r);
-                    say("Скажите второе число");
-                    line2 = int.Parse(r);
-                    double output;
-
-                    output = line1 + line2;
-                    string OutputText;
-                    OutputText = output.ToString();
-
-                    say(OutputText);
-                    wake = true;
-                    math_add = false;
-                    
+                    //What it says
+                    say(DateTime.Now.ToString("h:mm tt"));
                 }
+
+
+                //What you say
+                if (r == "what is today?")
+                {
+                    //What it says
+                    say(DateTime.Now.ToString("M/d/yyyy"));
+                }
+
+
+                //What you say
+                if (r == "open google")
+                {
+                    //What it says
+                    say("OK");
+                    Process.Start("https://google.com");
+                }
+
             }
-
-
-            //What you say
-            if (r == "Сколько времяни" || r == "Сколько время")
-            {
-                //What it says
-                say(DateTime.Now.ToString("h:mm tt"));
-            }
-
-
-            //What you say
-            if (r == "what is today?")
-            {
-                //What it says
-                say(DateTime.Now.ToString("M/d/yyyy"));
-            }
-
-
-            //What you say
-            if (r == "open google")
-            {
-                //What it says
-                say("OK");
-                Process.Start("https://google.com");
-            }
-            //}
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void label2_Click(object sender, EventArgs e)
         {
 
         }
-
-
     }
 }
