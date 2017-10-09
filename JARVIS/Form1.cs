@@ -10,22 +10,35 @@ using Microsoft.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Diagnostics;
 using System.IO;
+using System.Xml;
+using Amazon;
+using Amazon.Polly;
+using Amazon.Polly.Model;
+
 
 namespace JARVIS
 {
     public partial class Form1 : Form
     {
+
+
         public Form1()
         {
             InitializeComponent();
         }
         SpeechSynthesizer s = new SpeechSynthesizer();
         Boolean wake = true;
+        Boolean math_add = false;
 
+        string temp;
+        string condition;
+        string high;
+        string low;
 
 
         private void Form1_Shown(object sender, EventArgs e)
         {
+            
 
             s.SelectVoice("Microsoft Pavel Mobile");
             //s.SpeakAsync("привет");
@@ -44,16 +57,17 @@ namespace JARVIS
             Words.Add(new string[] {
                 "привет", "здравствуй","здравствуйте", "добрый день","дратути","дратути","дороу","однако зравствуйте","ку","как дела","как настроение", "чё как",
                 "Сколько время","Сколько времяни", "what is today?", "open google", "turn off", "wake up",
-                "restart", "update", "open steam", "close steam", "посчитай числа","скажите математическую функцию вы хотите исполнить","сложение",
-                "скажите первое число","скажите второе число"
+                "restart", "update", "open steam", "close steam", "сложи числа","скажите первое число","скажите второе число", "прогноз погоды",
+                "погода", "какая на сегодня погода"
             });
 
-            Choices Numbers = new Choices();
-            Words.Add(File.ReadAllLines(@"C:\Users\direc\Desktop\Numbers.txt"));
+            
+            //Words.Add(File.ReadAllLines(@"C:\Users\direc\Desktop\Numbers.txt"));
 
             GrammarBuilder gb = new GrammarBuilder();
             gb.Culture = ci;
             gb.Append(Words);
+
 
 
             Grammar g = new Grammar(gb);
@@ -72,6 +86,51 @@ namespace JARVIS
                 Console.WriteLine(" Voice Name: " + info.Name);
             }
         }
+
+        public String GetWeather(String input)
+        {
+            String query = String.Format("https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='los gatos, ca')&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+
+            XmlDocument wData = new XmlDocument();
+            wData.Load(query);
+
+            XmlNamespaceManager manager = new XmlNamespaceManager(wData.NameTable);
+            manager.AddNamespace("yweather", "http://xml.weather.yahoo.com/ns/rss/1.0");
+
+            XmlNode channel = wData.SelectSingleNode("query").SelectSingleNode("results").SelectSingleNode("channel");
+            XmlNodeList nodes = wData.SelectNodes("query/results/channel");
+            try
+            {
+                temp = channel.SelectSingleNode("item").SelectSingleNode("yweather:condition", manager).Attributes["temp"].Value;
+                condition = channel.SelectSingleNode("item").SelectSingleNode("yweather:condition", manager).Attributes["text"].Value;
+                high = channel.SelectSingleNode("item").SelectSingleNode("yweather:forecast", manager).Attributes["high"].Value;
+                low = channel.SelectSingleNode("item").SelectSingleNode("yweather:forecast", manager).Attributes["low"].Value;
+                if (input == "cond")
+                {
+                    return condition;
+                }
+                if (input == "temp")
+                {
+                    return temp;
+                    
+                }
+                if (input == "high")
+                {
+                    return high;
+                }
+                if (input == "low")
+                {
+                    return low;
+                }
+                
+            }
+            catch
+            {
+                return "Error Reciving data";
+            }
+            return "error";
+        }
+
 
         public void say(String h)
         {
@@ -98,12 +157,25 @@ namespace JARVIS
 
 
 
-            //if (wake == true)
-            //{
+            /////////
+            //Weather
+            /////////
+            {
+                if (r == "прогноз погоды" || r == "погода" || r == "какая на сегодня погода" )
+                {
+                    Console.WriteLine(condition);
+                    //What it says
+                    say("Сегодня будет" + GetWeather("cond"));// + "Средняя температура" + GetWeather("temp") + "градусов" + "Температура днем:" + GetWeather("high") + "градусов" + "Температура ночью: " + GetWeather("low") + "градусов");
+                }
+
+            }
 
 
-            //What you say
-            if (r == "Открой (ПРОГРАММА)")
+
+
+
+                //What you say
+                if (r == "Открой (ПРОГРАММА)")
             {
                 //What it says
                 say("Opening App");
@@ -149,24 +221,30 @@ namespace JARVIS
                 int line2 = 0;
 
 
-                if (r == "посчитай числа")
+                if (r == "сложи числа")
                 {
-                    say("скажите математическую функцию вы хотите исполнить");
-                    if (r == "сложение")
-                    {
-                        say("скажите первое число");
-                        line1 = int.Parse(r);
-                        say("Скажите второе число");
-                        line2 = int.Parse(r);
-                        double output;
 
-                        output = line1 + line2;
-                        string OutputText;
-                        OutputText = output.ToString();
+                    math_add = true;
+                    wake = false;
 
-                        say(OutputText);
-                    }
+                }
 
+                if (math_add == true)
+                {
+                    say("скажите первое число");
+                    line1 = int.Parse(r);
+                    say("Скажите второе число");
+                    line2 = int.Parse(r);
+                    double output;
+
+                    output = line1 + line2;
+                    string OutputText;
+                    OutputText = output.ToString();
+
+                    say(OutputText);
+                    wake = true;
+                    math_add = false;
+                    
                 }
             }
 
